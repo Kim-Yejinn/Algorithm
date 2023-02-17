@@ -31,7 +31,7 @@ public class SWEA_1215_회문1 {
 					}
 
 					int flag1 = 1;
-					int flag2 = 1;
+					int flag2 = 1; 
 
 					for (int j = 0; j < N / 2; j++) {
 						if (temp1[j] != temp1[N - 1 - j]) {
