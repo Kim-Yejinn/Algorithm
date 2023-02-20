@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,47 +9,51 @@ public class BOJ_17413 {
 
 		String input = sc.nextLine();
 
-		String[] arr = input.split(" ");
-		System.out.println(Arrays.toString(arr));
+		char[] arr = input.toCharArray();
 
+		int flag = 0;
+		List<Character> temp = new ArrayList<>();
 		for (int i = 0; i < arr.length; i++) {
-			List<Character> temp1 = new ArrayList<>();
-			int flag = 0;
-			int flag1 = 0;
-
-			for (int j = 0; j < arr[i].length(); j++) {
-				if (arr[i].charAt(j) == '<') {
-					flag = 1;
-				} else if (arr[i].charAt(j) == '>') {
-					flag = 0;
-				}
-
-				if (flag == 1) {
-					if (flag1 == 0) {
-						flag = 1;
-						
-						for (int k = temp1.size() - 1; k >= 0; k--) {
-							System.out.print(temp1.get(k));
-						}
-						temp1.clear();
-					}
-					System.out.print(arr[i].charAt(j));
-
-				} else {
-					flag1 = 0;
-					if (arr[i].charAt(j) == '<' || arr[i].charAt(j) == '>') {
-						System.out.print(arr[i].charAt(j));
-					} else {
-						temp1.add(arr[i].charAt(j));
-					}
-				}
-
+			if (arr[i] == '<') {
+				flag = 1;
+				reverse(temp);
+				temp.clear();
+				continue;
 			}
-			for (int k = temp1.size() - 1; k >= 0; k--) {
-				System.out.print(temp1.get(k));
+			if (arr[i] == '>') {
+				flag = 0;
+				System.out.print("<");
+				forward(temp);
+				System.out.print(">");
+				temp.clear();
+				continue;
 			}
-			System.out.print(" ");
+			if (arr[i] == ' ' && flag == 0) {
+				reverse(temp);
+				temp.clear();
+				System.out.print(" ");
+				continue;
+			}
+			if (i == arr.length - 1 && temp.size() != 0) {
+				temp.add(arr[i]);
+				reverse(temp);
+			}
+			temp.add(arr[i]);
 		}
 
 	}
+
+	static void reverse(List<Character> arr) {
+
+		for (int k = arr.size() - 1; k >= 0; k--) {
+			System.out.print(arr.get(k));
+		}
+	}
+
+	static void forward(List<Character> arr) {
+		for (int k = 0; k < arr.size(); k++) {
+			System.out.print(arr.get(k));
+		}
+	}
+
 }
