@@ -14,7 +14,7 @@ public class BOJ_2564 {
 			int ro = sc.nextInt(); // 방향
 			int dis = sc.nextInt(); // 거리
 			arr[i] = distance(ro, dis, w, h);
-		} 
+		}
 
 		int ro = sc.nextInt();
 		int dis = sc.nextInt();
