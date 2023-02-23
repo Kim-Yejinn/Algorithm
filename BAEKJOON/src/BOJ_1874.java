@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -9,27 +11,39 @@ public class BOJ_1874 {
 
 		int[] arr = new int[n];
 
-		System.out.println(n);
 		Stack<Integer> st = new Stack<>();
-
+		List<Character> list = new ArrayList<Character>();
 		int cnt = 1;
+		int end = 0;
 		for (int i = 0; i < n; i++) {
 			int temp = sc.nextInt();
-			System.out.println(temp);
 			boolean flag = true;
 			while (flag) {
-				System.out.println("반복");
 				if (!st.isEmpty() && st.peek() != temp) {
 					st.push(cnt++);
-					System.out.println('+');
+					list.add('+');
 				} else if (!st.isEmpty() && st.peek() == temp) {
 					flag = false;
 					st.pop();
-					System.out.println('-');
+					list.add('-');
+				} else if (st.isEmpty()) {
+					st.push(cnt++);
+					list.add('+');
 				}
 
+				if (cnt > n + 1 && !st.isEmpty()) {
+					flag = false;
+					end = 1;
+				}
+			}
+
+		}
+		if (end == 1) {
+			System.out.println("NO");
+		} else {
+			for (int j = 0; j < list.size(); j++) {
+				System.out.println(list.get(j));
 			}
 		}
-
 	}
 }
