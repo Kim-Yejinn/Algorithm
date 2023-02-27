@@ -3,6 +3,9 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class BOJ_1181 {
+	
+	//comparator. 메소드 사용해서 만들어도 된다.
+	//map쓰면 덮어쓰기 되서 중복확인 안해도 된다.
 
 	static class cmpword implements Comparator<String> {
 

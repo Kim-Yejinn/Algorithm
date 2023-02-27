@@ -11,26 +11,34 @@ public class BOJ_2941 {
 		int cnt = 0;
 		S: for (int i = 0; i < arr.length; i++) {
 			for (int k = 0; k < str.length; k++) {
+
 				boolean flag = true;
+
 				for (int j = 0; j < str[k].length(); j++) {
+					if (i + str[k].length() - 1 >= arr.length) {
+						flag = false;
+						break;
+					}
 					if (i + j < arr.length) {
 						if (arr[i + j] != str[k].charAt(j)) {
 							flag = false;
 							break;
 						}
 					}
-				} 
+				}
 				if (flag == true) {
 					cnt++;
 					if (k == 2) {
-						i += 2; 
+						i += 2;
 					} else {
 						i++;
 					}
 					continue S;
 				}
 				if (k == str.length - 1) {
-					cnt++;
+					if (arr[i] != '=' && arr[i] != '-') {
+						cnt++;
+					}
 				}
 			}
 

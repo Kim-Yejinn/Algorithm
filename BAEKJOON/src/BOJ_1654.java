@@ -8,11 +8,11 @@ public class BOJ_1654 {
 		int N = sc.nextInt(); // 필요한 랜선의 개수
 
 		int[] arr = new int[K];
-		int max = 0;
+		int max = 0; //최대길이
 		for (int i = 0; i < K; i++) {
 			arr[i] = sc.nextInt();
 			if (max < arr[i]) {
-				max = arr[i];
+				max = arr[i]; 
 			}
 		}
 
