@@ -10,7 +10,8 @@ public class BOJ_2304 {
 
 		int max_idx = 0;
 		int min_idx = 1010;
-
+		int max_value = 0;
+		int max_value_idx = 0;
 		for (int i = 0; i < N; i++) {
 			int L = sc.nextInt();
 			int H = sc.nextInt();
@@ -23,23 +24,28 @@ public class BOJ_2304 {
 			if (min_idx > L) {
 				min_idx = L;
 			}
+			if (max_value < H) {
+				max_value = H;
+				max_value_idx = L;
+			}
 		}
 
-
-		int cnt = 0;
-
-		int curr_left = 0;
-		int curr_right = 0;
-		for (int i = 0; i <= (max_idx - min_idx) / 2; i++) {
-
-			if (curr_left < arr[min_idx + i]) {
-				curr_left = arr[min_idx + i];
+		int curr_max = 0;
+		int sum = 0;
+		for (int i = min_idx; i <= max_value_idx; i++) {
+			if (curr_max < arr[i]) {
+				curr_max = arr[i];
 			}
-			if (curr_right < arr[max_idx - i]) {
-				curr_right = arr[max_idx - i];
-			}
-			cnt += curr_left + curr_right;
+			sum += curr_max;
 		}
-		System.out.println(cnt);
+		curr_max = 0;
+		for (int i = max_idx; i > max_value_idx; i--) {
+			if (curr_max < arr[i]) {
+				curr_max = arr[i];
+			}
+			sum += curr_max;
+		}
+
+		System.out.println(sum);
 	}
 }
