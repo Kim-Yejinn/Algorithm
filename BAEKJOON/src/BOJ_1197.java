@@ -47,7 +47,6 @@ public class BOJ_1197 {
 				sum += edgeList[i].weight;
 			}
 		}
-System.out.println(Arrays.toString(parents));
 		System.out.println(sum);
 
 	}
@@ -63,10 +62,13 @@ System.out.println(Arrays.toString(parents));
 	public static void union(int[] parents, int a, int b) {
 		int aroot = getParents(parents, a);
 		int broot = getParents(parents, b);
+		if (aroot == broot) {
+			return;
+		}
 		if (aroot < broot)
-			parents[b] = aroot;
+			parents[broot] = aroot;
 		else
-			parents[a] = broot;
+			parents[aroot] = broot;
 	}
 
 	// 같은 부모 확인
