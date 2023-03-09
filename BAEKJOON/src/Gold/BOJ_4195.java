@@ -1,71 +1,57 @@
 package Gold;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BOJ_4195 {
-	static int[] c;
-	static int[] parents;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		int T = Integer.parseInt(br.readLine());
 
-		int T = sc.nextInt();
+		int[] parents = new int[200010];
+//		for (int i = 0; i < parents.length; i++) {
+//			parents[i] = i;
+//		}
+
+		int t = 0;
 
 		for (int tc = 0; tc < T; tc++) {
-			int F = sc.nextInt();
-			c = new int[F];
-			parents = new int[F];
+			int F = Integer.parseInt(br.readLine());
+			for (int i = 0; i < 2 * F; i++) {
+				parents[i] = i;
+			}
+			Map<String, Integer> map = new HashMap<String, Integer>();
+
+			t = 0;
 
 			for (int i = 0; i < F; i++) {
+				String[] str = br.readLine().split(" ");
 
-				List<String> list = new ArrayList<String>();
-				String str1 = sc.next();
-				String str2 = sc.next();
+				map.put(str[0], map.size());
 
-				int flag1 = 0;
-				int flag2 = 2;
+				map.put(str[1], map.size());
 
-				int num1 = 0;
-				int num2 = 0;
-				for (int j = 0; j < list.size(); j++) {
-					if (list.size() != 0) {
-						if (list.get(j).equals(str1)) {
-							num1 = j;
-						} else {
-							if (j == list.size() - 1) {
-								list.add(str1);
-								num1 = j;
-							}
-						}
-					} else {
-						list.add(str1);
-						num1 = j;
-						break;
-					}
-					if (list.get(j).equals(str2)) {
-						num2 = j;
-					} else {
-						if (j == list.size() - 1) {
-							list.add(str2);
-							num2 = j;
-						}
-					}
-				}
-
-				union(parents, num1, num2);
+				union(parents, map.get(str[0]), map.get(str[1]));
 				int cnt = 0;
-				for (int k = 0; k < list.size(); k++) {
-					System.out.println(num1);
-					System.out.println(k);
-					if (find(parents, num1, k) == 1) {
+
+				for (int k = 0; k < map.size(); k++) {
+					if (getParents(parents, k) == getParents(parents, map.get(str[0]))) {
 						cnt++;
 					}
 				}
-				System.out.println(cnt);
+				bw.write(cnt + "\n");
+				t = map.size();
 			}
 		}
+		bw.flush();
+		bw.close();
 
 	}
 
@@ -80,19 +66,9 @@ public class BOJ_4195 {
 		int broot = getParents(parents, b);
 
 		if (aroot < broot) {
-			broot = getParents(parents, aroot);
+			parents[broot] = aroot;
 		} else {
-			aroot = getParents(parents, broot);
-		}
-	}
-
-	public static int find(int[] parents, int a, int b) {
-		int aroot = getParents(parents, a);
-		int broot = getParents(parents, b);
-		if (aroot == broot) {
-			return 1;
-		} else {
-			return 0;
+			parents[aroot] = broot;
 		}
 	}
 
