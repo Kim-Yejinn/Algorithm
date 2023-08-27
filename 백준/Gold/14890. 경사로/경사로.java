@@ -1,5 +1,11 @@
 
 import java.util.Scanner;
+// 1시간
+
+// 1. 겹치는 것 주의
+// 2. abs로 할경우 3-2 1-2 같다고 할수도..
+// 3. 경사 올라가는 것/ 내려 가는 것 다름
+
 
 public class Main {
     static int[][] map;
@@ -48,7 +54,9 @@ public class Main {
 
         // T : 경사로 F : 경사로 아님
         boolean status = false;
+        // 앞으로 갈 곳중 가능한 칸
         int count_up = 0;
+        // 지나온 것 중 가능한 칸
         int count_down = 1;
 
         for (int i = 1; i < N; i++) {
@@ -99,6 +107,7 @@ public class Main {
                 }
             }
         }
+        // 아직 경사로 설치중일 수도 있으니
         if (count_up == 0) {
             return result;
         } else {
