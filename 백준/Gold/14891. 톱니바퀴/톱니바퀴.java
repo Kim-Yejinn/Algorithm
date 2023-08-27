@@ -1,9 +1,20 @@
-
 import java.util.Scanner;
 
 public class Main {
     // start : 14: 48
     // finish : 15 : 23
+    // 35분
+    
+    // 풀이
+    // 톱니 배열로 관리 + 인덱스로 관리
+    // 인덱스 나머지 이용해서 계산
+    
+    // 주의
+    // 1. 시계/반시계 헷갈리지 말기.
+
+    // 개선 사항
+    // 1. 점수를 비트연산자로 할수도 있을듯
+    // 2. 
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
