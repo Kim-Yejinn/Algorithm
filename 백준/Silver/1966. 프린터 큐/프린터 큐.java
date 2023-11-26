@@ -1,67 +1,61 @@
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Main {
+    public static class Node{
+        int num;
+        int prior;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
+        Node(int num, int prior){
+            this.num = num;
+            this.prior = prior;
+        }
 
-		for (int i = 0; i < T; i++) {
-			int N = sc.nextInt();
-			int M = sc.nextInt();
-			Queue<Integer> q = new LinkedList<>();
-			List<Integer> list = new LinkedList<>();
-			int num = 0;
-			for (int j = 0; j < N; j++) {
-				int temp = sc.nextInt();
-				q.add(temp);
-				if (j == M) {
-					num = temp;
-				}
-			}
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-			for (int j = 0; j < N; j++) {
-				int temp = q.poll();
-				if (temp > num) {
-					list.add(temp);
-				}
-				q.add(temp);
-			}
-			Collections.sort(list, Collections.reverseOrder());
+        int T = sc.nextInt();
 
-			int cnt = 0;
-			int idx = M;
 
-			while (true) {
-				if (list.isEmpty() && idx == 0) {
-					cnt++;
-					break;
-				}
-				int temp = q.poll();
-				idx--;
+        for(int tc = 0; tc<T; tc++){
+            int N = sc.nextInt();
+            int M = sc.nextInt();
 
-				if (!list.isEmpty() && list.get(0) != temp) {
-					q.add(temp);
-					cnt--;
-				}
-				if (list.isEmpty() && temp != num) {
-					q.add(temp);
-					cnt--;
-				}
-				if (!list.isEmpty() && list.get(0) == temp) {
-					list.remove(0);
-				}
-				if (idx < 0) {
-					idx = q.size() - 1;
-				}
+            // 답 순서
+            int ans = 0;
 
-				cnt++;
-			}
-			System.out.println(cnt);
-		}
-	}
+            // 순서를 넣자
+            ArrayList<Integer> list = new ArrayList<>();
+
+            // 인덱스
+            int idx = 0;
+
+            // 문서들 번호
+            Queue<Node> q = new LinkedList<>();
+
+            for(int i =0; i<N; i++){
+                int pri = sc.nextInt();
+                q.add(new Node(i, pri));
+                list.add(pri);
+            }
+            Collections.sort(list,Collections.reverseOrder());
+
+            while(!q.isEmpty()){
+                Node temp = q.poll();
+
+                if(list.get(idx) == temp.prior){
+                    ans++;
+                    idx++;
+                    if(temp.num == M){
+                        System.out.println(ans);
+                        break;
+                    }
+                }else{
+                    q.add(temp);
+                }
+            }
+        }
+
+    }
 }
