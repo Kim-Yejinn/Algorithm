@@ -13,6 +13,11 @@ public class Main {
         }
     }
 
+
+    // BufferedReader를 사용할 경우 메모리, 시간 측면에서 이득(메모리 초과 해결)
+    // BufferedWriter를 사용할 경우에도 시간 이득( 3400ms -> 724ms)
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
