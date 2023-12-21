@@ -3,6 +3,9 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Main {
+    // 괄호 문자열 앞에 (나 [가 있는 경우도 있다.
+
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
