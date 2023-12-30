@@ -1,43 +1,37 @@
 import java.util.Scanner;
- 
+
 public class Main {
-	
-	static Integer[] dp;
-	static int[] arr;
-    
-	public static void main(String[] args) {
-    
-		Scanner in = new Scanner(System.in);
-		
-		int N = in.nextInt();
-		
-		dp = new Integer[N + 1];
-		arr = new int[N + 1];
-		
-		for(int i = 1; i < N + 1; i++) {
-			arr[i] = in.nextInt();
-		}
- 
-		dp[0] = 0;
-		dp[1] = arr[1];
-		
-		/*
-		 *  (N이 1로 주어질 수 있으므로 이럴 때를 위해 조건식을 달아둔다.
-		 *  또한 dp[2]는 어떤 경우에도 첫 번째와 두 번째를 합한 것이 최댓값이다. 
-		 */
-		if(N > 1) {
-			dp[2] = arr[1] + arr[2];
-		}
-		
-		System.out.println(recur(N));
-	}
-	
-	static int recur(int N) {
-		
-		if(dp[N] == null) {
-			dp[N] = Math.max(Math.max(recur(N - 2), recur(N - 3) + arr[N - 1]) + arr[N], recur(N - 1));
-		}
-		
-		return dp[N];
-	}
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int N = sc.nextInt();
+
+        int[] dp = new int[N+1];
+        int[] arr = new int[N+1];
+
+        dp[1] = arr[1] = sc.nextInt();
+
+        if(N>=2){
+            arr[2] = sc.nextInt();
+            dp[2] = arr[1]+arr[2];
+        }
+
+        for(int i=3; i<=N; i++){
+            arr[i] = sc.nextInt();
+
+            int c1 = dp[i-2]+arr[i];
+            int c2 = dp[i-3]+arr[i-1]+arr[i];
+            int c3 = dp[i-1]; // 지금 것 선택 안한 경우
+
+            int max = c1;
+            if(max<c2){
+                max = c2;
+            }
+            if(max<c3){
+                max = c3;
+            }
+            dp[i] = max;
+        }
+        System.out.println(dp[N]);
+    }
 }
