@@ -1,6 +1,9 @@
 import java.util.Scanner;
 
 public class Main {
+
+    // dp로 해야 할 것은 해당 숫자로 끝나는 N자리를 가지는 개수!!!
+    
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
