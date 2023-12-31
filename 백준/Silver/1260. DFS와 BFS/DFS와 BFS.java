@@ -1,62 +1,81 @@
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
-	static int[][] arr;
-	static int N;
-	static int[] c;
-	static Queue<Integer> q = new LinkedList<Integer>();
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		int M = sc.nextInt();
-		int V = sc.nextInt();
+    static ArrayList<Integer>[] list;
+    static boolean[] visit;
 
-		arr = new int[N + 1][N + 1];
+    static int N;
+    static int M;
+    static int V;
+    static StringBuilder sb;
 
-		for (int i = 0; i < M; i++) {
-			int a = sc.nextInt();
-			int b = sc.nextInt();
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-			arr[a][b] = arr[b][a] = 1;
-		}
-		c = new int[N + 1];
-		dfs(V);
-		System.out.println();
-		c = new int[N + 1];
-		bfs(V);
+        N = sc.nextInt();
+        M = sc.nextInt();
+        V = sc.nextInt();
 
-	}
 
-	public static void dfs(int num) {
-		if (c[num] == 1)
-			return;
-		c[num] = 1;
-		System.out.print(num + " ");
-		for (int i = 1; i < arr[num].length; i++) {
-			if (arr[num][i] == 1) {
-				dfs(i);
-			}
-		}
-	}
+        list = new ArrayList[N+1];
 
-	public static void bfs(int num) {
-		q.add(num);
-		c[num] = 1;
+        for(int i=0; i<=N; i++){
+            list[i] = new ArrayList<>();
+        }
 
-		while (!q.isEmpty()) {
-			int x = q.poll();
-			System.out.print(x + " ");
-			for (int i = 1; i < arr[x].length; i++) {
-				if (c[i] == 0 && arr[x][i] == 1) {
-					q.add(i);
-					c[i] = 1;
-				}
-			}
-		}
-	}
+        for(int i=0; i<M; i++){
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+
+            list[a].add(b);
+            list[b].add(a);
+        }
+        for(int i=0; i<=N; i++){
+            Collections.sort(list[i]);
+        }
+
+        // dfs
+        visit = new boolean[N+1];
+        sb = new StringBuilder();
+        dfs(V);
+        System.out.println(sb);
+
+        // bfs
+        visit = new boolean[N+1];
+        sb = new StringBuilder();
+        bfs(V);
+        System.out.println(sb);
+
+    }
+    public static void dfs(int num){
+        visit[num] = true;
+        sb.append(num).append(" ");
+        for(int i=0; i<list[num].size(); i++){
+            int t = list[num].get(i);
+            if(!visit[t]){
+                dfs(t);
+            }
+        }
+    }
+
+    public static void bfs(int num){
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(num);
+        visit[num] = true;
+
+        while (!q.isEmpty()){
+            int t = q.poll();
+            sb.append(t).append(" ");
+            for(int i=0; i<list[t].size(); i++){
+                int temp = list[t].get(i);
+                if(!visit[temp]){
+                    q.offer(temp);
+                    visit[temp] = true;
+                }
+            }
+
+        }
+    }
 
 }
