@@ -1,182 +1,147 @@
-
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-
-    static int N;
-    static int M;
-    static int K;
-    static int[][] map;
-    static int[][] arr;
-    static int[][] temp;
-    static int[][] ans;
-
-    // 연산들 저장해 둘 배열
-    static int[] R_list;
-    static int[] C_list;
-    static int[] S_list;
-
-    static int[] select;
-    static boolean[] visit;
-
-    static int answer;
-
-    public static void main(String[] args) {
+    static int N, M, K, cnt, min;
+    static int[][] map, list;
+    public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
 
         N = sc.nextInt();
         M = sc.nextInt();
         K = sc.nextInt();
 
-        map = new int[N + 1][M + 1];
-        arr = new int[N + 1][M + 1];
+        map = new int[N][M];
+        list = new int[K][3];
 
-        R_list = new int[K];
-        C_list = new int[K];
-        S_list = new int[K];
-
-        select = new int[K];
-        visit = new boolean[K];
-
-        answer = Integer.MAX_VALUE;
-
-        // 입력
-        for(int r=1; r<=N; r++){
-            for(int c=1; c<=M; c++){
-                map[r][c] = sc.nextInt();
+        for (int i=0; i<N; i++) {
+            for (int j=0; j<M; j++) {
+                map[i][j] = sc.nextInt();
             }
         }
 
-        for (int t = 0; t < K; t++) {
-            R_list[t] = sc.nextInt();
-            C_list[t] = sc.nextInt();
-            S_list[t] = sc.nextInt();
+        for (int i=0; i<K; i++) {
+            list[i][0] = sc.nextInt(); // r
+            list[i][1] = sc.nextInt(); // c
+            list[i][2] = sc.nextInt(); // s
+            // r-s, c-s     r+s, c+s
         }
 
-        // 순서 정하기
-        rec(0);
-        
-        // 답 출력
-        System.out.println(answer);
+        cnt = 0;
+        min = Integer.MAX_VALUE;
+        int[] arr = new int[K];
+        boolean[] visited = new boolean[K];
+
+        // permutation 함수 돌리고 => 순열함수 다채워지면 그걸로 doCycle 돌려서 min값 찾고 비교해서 min값 최신화
+        // 마지막에 최종 min 값을 출력하면 됨
+        permutation(0, arr, visited);
+
+        System.out.println(min);
+
     }
 
-    public static void init(){
-        // 맵 복사
-        for(int r=1; r<=N; r++){
-            for(int c=1; c<=M; c++){
-                arr[r][c] = map[r][c];
-            }
-        }
-    }
-    public static void cal(){
-        // 맵 초기화
-        init();
-        // 돌리기
-        for(int i=0; i<K; i++){
-            int num = select[i];
-            start(R_list[num],C_list[num], S_list[num]);
-        }
-
-        // 계산
-        int min = Integer.MAX_VALUE;
-        for(int r=1; r<=N; r++){
-            int sum =0;
-            for(int c=1; c<=M;c++){
-                sum+=arr[r][c];
-            }
-            if(sum<min){
-                min=sum;
-            }
-        }
-//        System.out.println(min);
-        if(min<answer){
-            answer = min;
-        }
-    }
-
-    public static void rec(int num){
-        if(num==K){
-            // 다 골랐을 경우
-
-//            System.out.println(Arrays.toString(select));
-            cal();
+    public static void permutation (int cnt, int[] arr, boolean[] visited) {
+        if (cnt == K) {
+            // 순서정해서 arr 채웠으면 그걸로 회전 돌릴 함수
+//			for (int i=0; i<K; i++) {
+//				System.out.print(arr[i]+" ");
+//			}
+//			System.out.println();
+            doCycle(arr);
             return;
         }
 
-        for(int i=0; i<K; i++){
-            if(visit[i]){
-                continue;
-            }
-            visit[i] = true;
-            select[num] = i;
-            rec(num + 1);
-            visit[i] = false;
-        }
-
-    }
-    public static void start(int R, int C, int S){
-        // 임시 배열 생성 및 복사
-        int len = 2*S+1;
-        temp = new int[len][len];
-        ans = new int[len][len];
-
-        int stR = 0;
-        int stC = 0;
-
-        for(int r=R-S; r<=R+S; r++){
-            for(int c=C-S; c<=C+S; c++){
-                temp[stR][stC] = arr[r][c];
-                stC++;
-            }
-            stC=0;
-            stR++;
-        }
-        cycle(len, S);
-        paste(R,C,S);
-    }
-
-    public static void cycle(int len, int S){
-        // 복사된 배열을 회전
-        // 시계방향 회전 및 배열에 넣기
-        for(int i=0; i<S; i++){
-            // 시작 점 좌표는 (i, i)
-
-            // 오른 len-i-1 까지
-            for(int j=i+1; j<=len-i-1; j++) {
-                ans[i][j] = temp[i][j-1];
-            }
-            // 아래 len-i-1 까지
-            for(int j=i+1; j<=len-i-1; j++){
-                ans[j][len-i-1] = temp[j-1][len-i-1];
-            }
-
-            // 왼 i까지
-            for(int j=len-i-2; j>=i; j--){
-                ans[len-i-1][j] = temp[len-i-1][j+1];
-            }
-
-            // 위 i까지
-            for(int j=len-i-2; j>=i; j--){
-                ans[j][i] = temp[j+1][i];
-            }
-        }
-        // 중앙은 그대로 넣어주기
-        ans[S][S] = temp[S][S];
-    }
-
-    public static void paste(int R, int C, int S){
-        int stR = 0;
-        int stC = 0;
-
-        for(int r=R-S; r<=R+S; r++){
-            for(int c=C-S; c<=C+S; c++){
-                arr[r][c] = ans[stR][stC];
-                stC++;
-            }
-            stC=0;
-            stR++;
+        for (int i=0; i<K; i++) {
+            if (visited[i]) continue;
+            visited[i] = true;
+            arr[cnt] = i; // 어떤 순서인지가 arr에 배열로 담기는거임
+            permutation(cnt+1, arr, visited);
+            visited[i] = false;
         }
     }
 
+    public static void doCycle (int[] arr) {
+        // 깊은복사로 맵 하나 더만들기
+        int[][] tmpMap = new int[N][M];
+        for (int i=0; i<N; i++) {
+            for (int j=0; j<M; j++) {
+                tmpMap[i][j] = map[i][j];
+            }
+        }
+
+        for (int i=0; i<K; i++) {
+            int r = list[arr[i]][0]-1;
+            int c = list[arr[i]][1]-1;
+            int s = list[arr[i]][2];
+//			System.out.println(r+" "+c+" "+s);
+
+//			System.out.println("처음 배열@@@");
+//			for (int a=0; a<N; a++) {
+//				for (int b=0; b<M; b++) {
+//					System.out.print(tmpMap[a][b]+" ");
+//				}
+//				System.out.println();
+//			}
+//			System.out.println("처음 배열@@@");
+
+            // s를 하나씩 키워가면서 한바퀴씩 돌거임 => ss로 쓰자
+            for (int ss=1; ss<=s; ss++) {
+                // 네 귀퉁이 temp로 저장하면서 걍 돌리면 됨
+                //  x   tmp1
+                // tmp3 tmp2
+
+                // 위 => y 하나씩 감소
+                int tmp1 = tmpMap[r-ss][c+ss];
+                for (int y=c+ss; y>c-ss; y--) {
+                    tmpMap[r-ss][y] = tmpMap[r-ss][y-1];
+                }
+
+                // 오른쪽 => x 하나씩 감소
+                int tmp2 = tmpMap[r+ss][c+ss];
+                for (int x=r+ss; x>r-ss; x--) {
+                    tmpMap[x][c+ss] = tmpMap[x-1][c+ss];
+                }
+                tmpMap[r-ss+1][c+ss] = tmp1;
+
+                // 아래 => y 하나씩 증가
+                int tmp3 = tmpMap[r+ss][c-ss];
+                for (int y=c-ss; y<c+ss; y++) {
+                    tmpMap[r+ss][y] = tmpMap[r+ss][y+1];
+                }
+                tmpMap[r+ss][c+ss-1] = tmp2;
+
+                // 왼쪽 => x 하나씩 증가
+                for (int x=r-ss; x<r+ss; x++) {
+                    tmpMap[x][c-ss] = tmpMap[x+1][c-ss];
+                }
+                tmpMap[r+ss-1][c-ss] = tmp3;
+            }
+//			for (int a=0; a<N; a++) {
+//				for (int b=0; b<M; b++) {
+//					System.out.print(tmpMap[a][b]+" ");
+//				}
+//				System.out.println();
+//			}
+//            System.out.println();
+        }
+
+
+        // 회전 다 돌린 후 min값 추출
+        for (int i=0; i<N; i++) {
+            int sum = 0;
+            for (int j=0; j<M; j++) {
+                sum += tmpMap[i][j];
+            }
+            if (min > sum) {
+                min = sum;
+
+
+//				for (int a=0; a<K; a++) {
+//					System.out.print(arr[a]+" ");
+//				}
+//				System.out.println();
+            }
+        }
+
+    }
 }
