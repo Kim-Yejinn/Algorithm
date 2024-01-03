@@ -1,0 +1,12 @@
+-- 코드를 입력하세요
+
+WITH TEMP AS(
+            SELECT REST_ID, AVG(REVIEW_SCORE) AS AvgSC
+            FROM REST_REVIEW 
+            GROUP BY REST_ID
+             )
+             
+SELECT a.REST_ID, a.REST_NAME, a.FOOD_TYPE, a.FAVORITES, a.ADDRESS, ROUND(b.AvgSC,2) as SCORE
+FROM REST_INFO a JOIN TEMP b ON a.REST_ID = b.REST_ID
+WHERE a.ADDRESS LIKE "서울%"
+ORDER BY 6 desc, 4 desc
