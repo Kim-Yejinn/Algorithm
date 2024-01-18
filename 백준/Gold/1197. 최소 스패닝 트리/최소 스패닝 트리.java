@@ -18,10 +18,11 @@ public class Main {
 
     static int V;
     static int E;
-    static List<Node>[] list;
-    static boolean[] visit;
     static PriorityQueue<Node> q;
     static int sum;
+
+    static int[] parent;
+    static int[] rank;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -31,13 +32,14 @@ public class Main {
         V = Integer.parseInt(st.nextToken());
         E = Integer.parseInt(st.nextToken());
 
-        list = new ArrayList[V+1];
-        visit = new boolean[V+1];
         q = new PriorityQueue<>((o1, o2) -> o1.weight - o2.weight);
         sum = 0;
 
-        for(int i=1; i<=V; i++){
-            list[i] = new ArrayList<>();
+        parent = new int[V+1];
+        rank = new int[V+1];
+
+        for(int i=0; i<=V; i++){
+            parent[i] = i;
         }
 
         for(int i=0; i<E; i++){
@@ -47,36 +49,54 @@ public class Main {
             int f = Integer.parseInt(st.nextToken());
             int w = Integer.parseInt(st.nextToken());
 
-            list[s].add(new Node(s, f, w));
-            list[f].add(new Node(f, s, w));
+            q.offer(new Node(s, f, w));
         }
-        primMST();
+
+        kruskalMST();
         System.out.println(sum);
 
     }
 
-    public static void primMST(){
-        q.offer(new Node(1, 1, 0));
+    public static int getParent(int x){
+        if(x==parent[x]){
+            return x;
+        }
+        return parent[x] = getParent(parent[x]);
+    }
 
+    public static void union(int a, int b){
+        int aroot = getParent(a);
+        int broot = getParent(b);
+
+        if(aroot == broot){
+            return;
+        }
+
+        if(rank[aroot] == rank[broot]){
+            parent[aroot] = broot;
+            rank[broot]++;
+        }else if(rank[aroot]< rank[broot]){
+            parent[aroot] = broot;
+        }else{
+            parent[broot] = aroot;
+        }
+    }
+    public static void kruskalMST(){
         while(!q.isEmpty()){
+
+            // 가중치가 가장 작은 간선
             Node temp = q.poll();
 
-            // weight 가장 작은 것 가져오기
-            // 방문 여부 확인
-            if(visit[temp.ed]){
-                continue;
+            if(getParent(temp.st) != getParent(temp.ed)){
+                // 부모가 다른 간선일 경우 - 사이클이 아닐때
+                // 연결 해주고
+                union(temp.st, temp.ed);
+                // 추가해준다
+                sum += temp.weight;
             }
-            sum+= temp.weight;
-            visit[temp.ed] = true;
 
-            for(int i=0 ;i<list[temp.ed].size(); i++) {
-                // 연결 된것 돌면서 방문하지 않은 것 모두
-                Node next = list[temp.ed].get(i);
-                if (!visit[next.ed]) {
-                    q.offer(next);
-                }
-            }
         }
 
     }
+
 }
