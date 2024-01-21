@@ -7,7 +7,6 @@ import java.util.StringTokenizer;
 
 public class Main {
     static int[] tree;
-    static Map<Integer, Integer> map;
     static int MAX = 2_000_000;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,7 +14,6 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         tree = new int[4*MAX];
-        map = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         for(int i=0; i<N; i++){
@@ -34,7 +32,6 @@ public class Main {
     }
     public static void update(int X, int node, int S, int E){
         if(S==E){
-            map.put(node, X);
             tree[node]++;
             return;
         }
@@ -52,7 +49,7 @@ public class Main {
     public static int query(int X, int node, int S, int E){
         if(S==E){
             tree[node]--;
-            return map.get(node);
+            return S;
         }
         int mid = (S+E)/2;
         tree[node]--;
