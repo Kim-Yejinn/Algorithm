@@ -1,78 +1,81 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    // 점 갱신, 구간 쿼리
-    static long[] tree;
-    static int SIZE;
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    static long[] A; // 입력이 들어가 있는 배열
+    static long[] bucket; // 구간 합을 저장해 두는 곳
 
-        int N = sc.nextInt();
-        int M = sc.nextInt();
-        int K = sc.nextInt();
+    static int N;
+    static int size; // 루트 N의 값
 
-        SIZE = 4*N;
-        tree = new long[SIZE];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        for(int i=1; i<=N; i++){
-            long input = sc.nextLong();
-            update(i, input, 1, 1, N);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        A = new long[N];
+        size = (int) Math.sqrt(N);
+        bucket = new long[N/size + 1];
+
+        for(int i=0; i<N; i++){
+            long num = Long.parseLong(br.readLine());
+            // 입력
+            A[i] = num;
+            // 합을 나눠서 넣어준다
+            bucket[i/size] += A[i];
         }
-
-        StringBuilder sb = new StringBuilder();
         for(int i=0; i<M+K; i++){
-            int a = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+
+            int a = Integer.parseInt(st.nextToken());
 
             if(a == 1){
-                int b = sc.nextInt();
-                long c = sc.nextLong();
-                update(b,c,1,1, N);
+                int b = Integer.parseInt(st.nextToken())-1;
+                long c = Long.parseLong(st.nextToken());
+                update(b, c);
             }else{
-                int b = sc.nextInt();
-                int c = sc.nextInt();
-
-                sb.append(query(b, c, 1, 1, N)).append("\n");
+                int b = Integer.parseInt(st.nextToken())-1;
+                int c = Integer.parseInt(st.nextToken())-1;
+                System.out.println(query(b, c));
             }
         }
-        System.out.println(sb);
 
     }
-    public static void update(int X, long V, int node, int S, int E){
-        // 리프노드 일때
-        if(S==E){
-            tree[node] = V;
-            return;
-        }
+    public static void update(int pos, long val){
+        // pos에 val을 바꾸어야 한다.
+        // 원래 값과, 갱신해야 하는 값의 차이를 계산한다.
+        long diff = val - A[pos];
 
-        int mid = (S+E)/2;
+        // 해당 위치의 값을 변경한다
+        A[pos] = val;
 
-        if(X <= mid){
-            // 왼쪽
-            update(X, V, 2*node, S, mid);
-        }else{
-            // 오른쪽
-            update(X, V, 2*node+1, mid+1, E);
-        }
-
-        tree[node] = tree[2*node] + tree[2*node+1];
+        // 기존 원소의 묶음에 갱신으로 인한 차이를 반영해 준다
+        bucket[pos/size] += diff;
     }
-
-    public static long query(int L, int R, int node, int S, int E){
-        // 구간
-        if(R<S || E<L){
-            // 속하지 않을때
-            return 0;
-        }
-        if(L<=S && E<=R){
-            // 범위안에 모두 있을때
-            return tree[node];
+    public static long query(int low, int high){
+        long ret = 0;
+        
+        // 구간이 맞아 떨어지지 않으면
+        // 왼쪽 걸쳐 있는 부분 더해주기
+        while (low%size!=0 && low <= high){
+            ret += A[low++];
         }
 
-        int mid = (S+E)/2;
-
-        // 왼쪽, 오른쪽 리턴값 더하기
-        return query(L, R, 2*node, S, mid)
-                + query(L, R, 2*node+1, mid+1, E);
-
+        // 오른족 걸친 것들 더해주기 (오른쪽은 1 더해주고 계산해야 함. (끝부분이 배수 -1))
+        while ((high+1) % size!=0 && low<=high){
+            ret += A[high--];
+        }
+        // 구간 맞아 떨아질 때 -> 미리 계산해 둔 값을 더해 준다
+        while (low <= high){
+            ret += bucket[low / size];
+            low += size;
+        }
+        return ret;
     }
 }
