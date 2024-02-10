@@ -34,10 +34,10 @@ public class Main {
             list[a].add(b);
             list[b].add(a);
         }
-
+        person[0] = 1;
         for(int i=1; i<=N; i++){
             if(!visit[i]){
-                fill(i, 1);
+                fill(i, 0);
             }
         }
         if(check){
@@ -47,22 +47,22 @@ public class Main {
         }
 
     }
-    public static void fill(int num, int flag){
-        if(!check){
-            return;
+    public static void fill(int num, int last){
+        if(person[last] == 1){
+            person[num] = -1;
+        }else{
+            person[num] = 1;
         }
-        person[num] = flag;
 
         for(int i=0; i<list[num].size(); i++){
             int temp = list[num].get(i);
             if(!visit[temp]){
                 visit[temp] = true;
-                fill(temp, -flag);
+                fill(temp, num);
             }else{
-                if(person[temp]+flag != 0){
+                if(person[temp]+person[num] != 0){
                     // 이분 그래프가 될 수 없다.
                     check = false;
-                    return;
                 }
             }
         }
