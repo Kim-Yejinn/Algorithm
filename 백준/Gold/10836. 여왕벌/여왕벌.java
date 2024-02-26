@@ -13,59 +13,49 @@ public class Main {
 
         int[][] arr = new int[M][M];
 
-        for(int r=0; r<M; r++){
-            for(int c=0; c<M; c++){
-                arr[r][c] += 1;
-            }
-        }
+        int[] num = new int[2*M];
 
-        for(int i=0; i<N; i++){
+        // 1_000_000
+        for(int i=0; i<N; i++) {
             st = new StringTokenizer(br.readLine());
 
-            int[] num = new int[3];
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int c = Integer.parseInt(st.nextToken());
 
-            num[0] = Integer.parseInt(st.nextToken());
-            num[1] = Integer.parseInt(st.nextToken());
-            num[2] = Integer.parseInt(st.nextToken());
-
-            for(int r=M-1; r>=0; r--){
-                if(num[0] > 0){
-                    arr[r][0] += 0;
-                    num[0]--;
-                }else if(num[1] > 0){
-                    arr[r][0] += 1;
-                    num[1]--;
-                }else{
-                    arr[r][0] += 2;
-                    num[2]--;
-                }
-            }
-
-            for(int c=1; c<M; c++){
-                if(num[0] > 0){
-                    arr[0][c] += 0;
-                    num[0]--;
-                }else if(num[1] > 0){
-                    arr[0][c] += 1;
-                    num[1]--;
-                }else{
-                    arr[0][c] += 2;
-                    num[2]--;
-                }
-            }
-        }
-        for(int r=1; r<M; r++){
-            for(int c=1; c<M; c++){
-                int num = Math.max(Math.max(arr[r-1][c-1], arr[r-1][c]), arr[r][c-1]);
-                arr[r][c] = num;
-            }
+            num[a] += 1;
+            num[a + b] += 1;
         }
 
+        int idx = 0;
+
+        // 2*M-1 -> 1400
+        for(int r=M-1; r>=0; r--){
+            arr[r][0] = num[idx++];
+            num[idx] += num[idx-1];
+        }
+
+        for(int c=1; c<M; c++){
+            arr[0][c] = num[idx++];
+            num[idx] += num[idx-1];
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        // 700*700 = 49_000
         for(int r=0; r<M; r++){
             for(int c=0; c<M; c++){
-                System.out.print(arr[r][c]+" ");
+                if(r==0 || c==0){
+                    arr[r][c]++;
+                    sb.append(arr[r][c]).append(" ");
+                }else{
+                    int a = Math.max(Math.max(arr[r-1][c-1], arr[r-1][c]), arr[r][c-1]);
+                    arr[r][c] = a;
+                    sb.append(arr[r][c]).append(" ");
+                }
             }
-            System.out.println();
+            sb.append("\n");
         }
+        System.out.println(sb);
     }
 }
