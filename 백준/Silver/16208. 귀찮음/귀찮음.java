@@ -13,7 +13,7 @@ public class Main {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         List<Integer> list = new ArrayList<>();
-        int sum = 0;
+        long sum = 0;
         for(int i=0; i<N; i++){
             int t = Integer.parseInt(st.nextToken());
             list.add(t);
@@ -22,7 +22,7 @@ public class Main {
 
         Collections.sort(list);
 
-        int ans = 0;
+        long ans = 0;
         for(int i=0; i<N-1; i++){
             int t = list.get(i);
             sum -= t;
